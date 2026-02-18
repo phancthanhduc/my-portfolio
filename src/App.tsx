@@ -3,6 +3,18 @@ import { HeroInteractive } from './components/hero';
 
 const projects = [
   {
+    title: 'BeautyPay',
+    description: 'A modern beauty and salon booking platform with online appointments, service management, and payment integration.',
+    tech: ['React', 'Next.js', 'Node.js', 'Mobile App'],
+    link: '#'
+  },
+  {
+    title: 'OMS',
+    description: 'A comprehensive order management system with inventory tracking, customer management, and analytics dashboard.',
+    tech: ['React', 'TypeScript', 'Node.js', 'PostgreSQL'],
+    link: '#'
+  },
+  {
     title: 'VXCoin Exchange',
     description: 'A modern cryptocurrency exchange platform with real-time trading, wallet integration, and advanced charting features.',
     tech: ['React', 'TypeScript', 'Node.js', 'WebSocket'],
@@ -26,9 +38,9 @@ const skills = [
 ];
 
 const contacts = [
-  { label: 'GitHub', value: 'github.com/ducsmac', url: 'https://github.com/ducsmac' },
-  { label: 'Email', value: 'ducphandeveloper@gmail.com', url: 'mailto:ducphandeveloper@gmail.com' },
-  { label: 'LinkedIn', value: 'linkedin.com/in/ducphan', url: 'https://linkedin.com/in/ducphan' }
+  { label: 'GitHub', value: 'github.com/phancthanhduc', url: 'https://github.com/phancthanhduc' },
+  { label: 'Email', value: 'phancthanhduc@gmail.com', url: 'mailto:phancthanhduc@gmail.com' },
+  { label: 'LinkedIn', value: 'golander01', url: 'https://linkedin.com/in/golander01' }
 ];
 
 // Simple inline icons for skills
