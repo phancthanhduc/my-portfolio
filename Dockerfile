@@ -15,32 +15,21 @@ COPY . .
 # Build the application
 RUN npm run build
 
-# Stage 2: Production stage
-FROM node:20-alpine
+# Stage 2: Production stage with Nginx
+FROM nginx:alpine
 
-WORKDIR /app
-
-# Create non-root user
-RUN addgroup -g 1001 -S nodejs && \
-    adduser -S nextjs -u 1001
+# Copy custom nginx config
+COPY nginx/nginx.conf /etc/nginx/nginx.conf
 
 # Copy build artifacts from builder
-COPY --from=builder /app/dist ./dist
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/package.json ./
+COPY --from=builder /app/dist /usr/share/nginx/html
 
-# Change ownership to non-root user
-RUN chown -R nextjs:nodejs /app
-
-# Switch to non-root user
-USER nextjs
-
-# Expose port
-EXPOSE 5173 4173
+# Expose port 8080 (Railway default)
+EXPOSE 8080
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-    CMD node -e "require('http').get('http://localhost:5173', (r) => process.exit(r.statusCode === 200 ? 0 : 1))"
+    CMD wget --no-verbose --tries=1 --spider http://localhost:8080/ || exit 1
 
-# Start command - use preview for production, dev for development
-CMD ["npm", "run", "preview", "--", "--port", "5173"]
+# Start Nginx
+CMD ["nginx", "-g", "daemon off;"]
