@@ -41,37 +41,38 @@
 
 :root {
   --radius: 0.625rem;
-  --background: #050508;
-  --foreground: #e2e8f0;
-  --card: #0a0a0f;
-  --card-foreground: #e2e8f0;
-  --popover: #0a0a0f;
-  --popover-foreground: #e2e8f0;
-  --primary: #06b6d4;
-  --primary-foreground: #ffffff;
-  --secondary: #1a1a25;
-  --secondary-foreground: #e2e8f0;
-  --muted: #1a1a25;
-  --muted-foreground: #64748b;
-  --accent: #06b6d4;
-  --accent-foreground: #ffffff;
+  /* Lighter Dark Premium with Yellow */
+  --background: #2a2a2a;
+  --foreground: #fafafa;
+  --card: #333333;
+  --card-foreground: #fafafa;
+  --popover: #333333;
+  --popover-foreground: #fafafa;
+  --primary: #fbbf24;
+  --primary-foreground: #1a1a1a;
+  --secondary: #383838;
+  --secondary-foreground: #fafafa;
+  --muted: #383838;
+  --muted-foreground: #a1a1aa;
+  --accent: #fbbf24;
+  --accent-foreground: #1a1a1a;
   --destructive: #ef4444;
-  --border: rgba(255, 255, 255, 0.1);
-  --input: #1a1a25;
-  --ring: #06b6d4;
-  --chart-1: #06b6d4;
-  --chart-2: #8b5cf6;
-  --chart-3: #a855f7;
-  --chart-4: #c084fc;
-  --chart-5: #d8b4fe;
-  --sidebar: #0a0a0f;
-  --sidebar-foreground: #e2e8f0;
-  --sidebar-primary: #06b6d4;
-  --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #1a1a25;
-  --sidebar-accent-foreground: #e2e8f0;
-  --sidebar-border: rgba(255, 255, 255, 0.1);
-  --sidebar-ring: #06b6d4;
+  --border: #525252;
+  --input: #383838;
+  --ring: #fbbf24;
+  --chart-1: #fbbf24;
+  --chart-2: #a1a1aa;
+  --chart-3: #71717a;
+  --chart-4: #52525b;
+  --chart-5: #3f3f46;
+  --sidebar: #2a2a2a;
+  --sidebar-foreground: #fafafa;
+  --sidebar-primary: #fbbf24;
+  --sidebar-primary-foreground: #1a1a1a;
+  --sidebar-accent: #383838;
+  --sidebar-accent-foreground: #fafafa;
+  --sidebar-border: #525252;
+  --sidebar-ring: #fbbf24;
 }
 
 @layer base {
@@ -108,10 +109,10 @@
 
 @keyframes glow {
   0%, 100% {
-    box-shadow: 0 0 5px rgba(6, 182, 212, 0.3);
+    box-shadow: 0 0 5px rgba(251, 191, 36, 0.3);
   }
   50% {
-    box-shadow: 0 0 20px rgba(6, 182, 212, 0.6), 0 0 30px rgba(6, 182, 212, 0.3);
+    box-shadow: 0 0 20px rgba(251, 191, 36, 0.5), 0 0 30px rgba(251, 191, 36, 0.2);
   }
 }
 

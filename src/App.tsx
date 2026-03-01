@@ -1,40 +1,111 @@
+import { useState } from 'react';
 import { AnimeParallaxComponent, SkillCard } from './components/animated-bg';
 import { HeroInteractive } from './components/hero';
+import { WorkDetail, type Project } from './components/work-detail';
+import { ChatDialog } from './components/chat';
 
 const projects = [
   {
-    title: 'BeautyPay',
-    description: 'A modern beauty and salon booking platform with online appointments, service management, and payment integration.',
-    tech: ['React', 'Next.js', 'Node.js', 'Mobile App'],
-    link: '#'
+    slug: 'drprompt',
+    title: 'drprompt',
+    description: 'AI Prompt Management Platform - Build, manage, and optimize AI prompts with collaboration features, analytics, and seamless integration with Claude and OpenAI.',
+    tech: ['Next.js 16', 'React 19', 'TypeScript', 'Tailwind', 'Zustand', 'Prisma', 'PostgreSQL'],
+    techDetails: ['Next.js 16', 'React 19', 'TypeScript', 'Tailwind CSS', 'Zustand', 'Prisma ORM', 'PostgreSQL', 'Anthropic SDK', 'OpenAI', 'wavesurfer.js', 'JWT', 'Swagger UI'],
+    features: ['Prompt management & organization', 'AI integration (Claude, OpenAI)', 'Audio processing', 'User authentication', 'Admin dashboard', 'Search functionality'],
+    link: '#work/drprompt'
   },
   {
-    title: 'OMS',
-    description: 'A comprehensive order management system with inventory tracking, customer management, and analytics dashboard.',
-    tech: ['React', 'TypeScript', 'Node.js', 'PostgreSQL'],
-    link: '#'
+    slug: 'spsoft',
+    title: 'SPSOFT Portal',
+    description: 'Microsoft 365 and SPLA Service Provider Portal - Comprehensive portal for managing subscriptions, orders, invoices, and customer support.',
+    tech: ['React 18', 'Vite', 'Tailwind 4', 'Zustand', 'Radix UI'],
+    techDetails: ['React 18', 'Vite', 'Tailwind CSS 4', 'Zustand', 'Radix UI', 'TanStack Query', 'FullCalendar', 'ApexCharts', 'i18next', 'Framer Motion'],
+    features: ['User product management', 'Order processing', 'Invoice handling', 'Support ticket system', 'Analytics dashboard', 'Multi-language support'],
+    link: '#work/spsoft'
   },
   {
+    slug: 'beautypay',
+    title: 'BeautyPay Agency',
+    description: 'Payment and Agency Web Application - Platform for managing agency operations, client relationships, and payment processing.',
+    tech: ['React', 'Webpack', 'CKEditor 5'],
+    techDetails: ['React', 'Webpack', 'CKEditor 5', 'Sentry', 'air-datepicker', 'JS Year Calendar'],
+    features: ['Agency management', 'Payment processing', 'Client portal', 'Rich text editing', 'Error tracking'],
+    link: '#work/beautypay'
+  },
+  {
+    slug: 'minnobomcore',
+    title: 'Minno BOM Core',
+    description: 'Bill of Materials Management System - Manufacturing BOM management with advanced data grids, charting, and multi-language support.',
+    tech: ['React 18', 'Vite', 'MUI', 'Redux'],
+    techDetails: ['React 18', 'Vite', 'Material UI', 'Redux Toolkit', 'TanStack Query', 'ApexCharts', 'Recharts', 'i18next', 'Tiptap', 'Sentry', 'Supabase'],
+    features: ['BOM management', 'Advanced data grids', 'Charting & analytics', 'PDF generation', 'Map integration', 'Multi-language'],
+    link: '#work/minnobomcore'
+  },
+  {
+    slug: 'ceroms',
+    title: 'CER OMS',
+    description: 'Order Management System - Modern order processing system with inventory tracking, customer management, and analytics.',
+    tech: ['React 19', 'Vite', 'Tailwind', 'shadcn/ui'],
+    techDetails: ['React 19', 'Vite', 'Tailwind CSS', 'Radix UI', 'shadcn/ui', 'Redux Toolkit', 'Zustand', 'TanStack Query', 'TanStack Table', 'Recharts', 'Framer Motion'],
+    features: ['Order processing', 'Inventory tracking', 'Customer management', 'Analytics dashboard', 'Data tables', 'Form validation'],
+    link: '#work/ceroms'
+  },
+  {
+    slug: 'dwtech-api',
+    title: 'DW Tech API',
+    description: 'Backend API Services - Comprehensive Go-based backend with database, caching, messaging, and cloud storage.',
+    tech: ['Go', 'PostgreSQL', 'Redis'],
+    techDetails: ['Go', 'PostgreSQL', 'Redis', 'RabbitMQ', 'GORM', 'AWS S3', 'JWT', 'Google OAuth', 'Swagger'],
+    features: ['RESTful API', 'Database management', 'Caching layer', 'Message queue', 'File storage', 'Authentication', 'Email automation', 'Cron jobs'],
+    link: '#work/dwtech-api'
+  },
+  {
+    slug: 'dwtech-admin',
+    title: 'DW Tech Admin',
+    description: 'Admin Dashboard - React Admin based management interface for data administration and monitoring.',
+    tech: ['React 18', 'React Admin', 'MUI'],
+    techDetails: ['React 18', 'React Admin', 'Material UI', 'Axios', 'JSON Server'],
+    features: ['Data management', 'Admin interface', 'REST API integration', 'Rich text input', 'JSON viewer'],
+    link: '#work/dwtech-admin'
+  },
+  {
+    slug: 'dwtech-ui',
+    title: 'DW Tech Customer Portal',
+    description: 'Customer-Facing Web Application - Feature-rich portal with scheduling, charting, document viewing, and payment integration.',
+    tech: ['React 18', 'Redux', 'MUI'],
+    techDetails: ['React 18', 'Redux Toolkit', 'Material UI', 'React Router', 'SCSS', 'Framer Motion', 'ApexCharts', 'FullCalendar', 'Google OAuth', 'reCAPTCHA'],
+    features: ['Calendar scheduling', 'Charting & visualization', 'Document/PDF viewing', 'QR code generation', 'Image compression', 'Payment integration'],
+    link: '#work/dwtech-ui'
+  },
+  {
+    slug: 'vxcoin',
     title: 'VXCoin Exchange',
-    description: 'A modern cryptocurrency exchange platform with real-time trading, wallet integration, and advanced charting features.',
-    tech: ['React', 'TypeScript', 'Node.js', 'WebSocket'],
-    link: '#'
+    description: 'Vietnamese Cryptocurrency Exchange - Full-featured crypto exchange with NFT marketplace, trading, and wallet management.',
+    tech: ['Java 17', 'Spring Boot 3'],
+    techDetails: ['Java 17', 'Spring Boot 3.2.6', 'Gradle', 'Lombok', 'SpringDoc OpenAPI'],
+    features: ['Crypto trading', 'Wallet integration', 'NFT marketplace', 'Real-time charts', 'User management', 'Security features'],
+    link: '#work/vxcoin'
   },
   {
-    title: 'Portfolio V1',
-    description: 'Previous portfolio version with cyberpunk theme and 3D geometric shapes showcase.',
-    tech: ['React', 'Three.js', 'TailwindCSS'],
-    link: '#'
+    slug: 'filmsite',
+    title: 'Film Site',
+    description: 'Film Platform - NestJS-based film streaming and management platform with Turbo monorepo architecture.',
+    tech: ['NestJS', 'TypeScript', 'Turbo'],
+    techDetails: ['TypeScript', 'NestJS', 'Turbo', 'Node.js 22+', 'Zod'],
+    features: ['Film management', 'Streaming support', 'User authentication', 'Admin panel', 'Database integration'],
+    link: '#work/filmsite'
   }
 ];
 
 const skills = [
   { name: 'React / Next.js', level: 90 },
-  { name: 'TypeScript', level: 85 },
-  { name: 'Node.js', level: 80 },
-  { name: 'Three.js / WebGL', level: 70 },
-  { name: 'PostgreSQL / MongoDB', level: 75 },
-  { name: 'Docker / AWS', level: 70 }
+  { name: 'TypeScript', level: 90 },
+  { name: 'Node.js / NestJS', level: 85 },
+  { name: 'Go', level: 75 },
+  { name: 'Tailwind CSS / MUI', level: 85 },
+  { name: 'PostgreSQL / Redis', level: 80 },
+  { name: 'Docker / AWS', level: 75 },
+  { name: 'AI Integration', level: 80 }
 ];
 
 const contacts = [
@@ -98,8 +169,8 @@ function Section({ id, title, children }: { id: string; title: string; children:
     <section id={id} className="min-h-screen flex items-center py-20 relative">
       <div className="w-full max-w-4xl mx-auto px-8 relative z-10">
         <div className="flex items-center gap-4 mb-12">
-          <div className="w-12 h-px bg-gradient-to-r from-cyan-400 to-transparent" />
-          <h2 className="text-3xl font-light text-white tracking-wider">{title}</h2>
+          <div className="w-12 h-px bg-gradient-to-r from-[#fbbf24] to-transparent" />
+          <h2 className="text-3xl font-light text-[#f5f5f5] tracking-wider">{title}</h2>
         </div>
         {children}
       </div>
@@ -108,29 +179,57 @@ function Section({ id, title, children }: { id: string; title: string; children:
 }
 
 export default function App() {
+  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+  const [isChatOpen, setIsChatOpen] = useState(false);
+
+  const handleProjectClick = (project: Project) => {
+    setSelectedProject(project);
+  };
+
   return (
-    <main className="relative w-full min-h-screen bg-[#0a0a0f]">
+    <main className="relative w-full min-h-screen bg-[#2a2a2a]">
+      {/* Chat Dialog */}
+      <ChatDialog isOpen={isChatOpen} onClose={() => setIsChatOpen(false)} />
+
+      {/* Work Detail Modal */}
+      <WorkDetail
+        project={selectedProject}
+        onClose={() => setSelectedProject(null)}
+      />
+
       {/* Background */}
       <AnimeParallaxComponent />
 
       {/* Fixed Header */}
-      <header className="fixed top-0 left-0 right-0 z-50 px-8 py-6 flex justify-between items-center bg-[#0a0a0f]/80 backdrop-blur-md border-b border-white/5">
-        <span className="text-lg font-mono text-white tracking-widest">
-          <span className="text-cyan-400">DUC</span>
-          <span className="text-white/30">/</span>
-          <span className="text-pink-500">PHAN</span>
+      <header className="fixed top-0 left-0 right-0 z-50 px-8 py-6 flex justify-between items-center bg-[#2a2a2a]/80 backdrop-blur-md border-b border-[#525252]">
+        <span className="text-lg font-mono text-[#f5f5f5] tracking-widest">
+          <span className="text-[#fbbf24]">DUC</span>
+          <span className="text-[#f5f5f5]/30">/</span>
+          <span className="text-[#64748b]">PHAN</span>
         </span>
-        <nav className="flex gap-8">
-          {['about', 'work', 'contact'].map((item) => (
-            <a
-              key={item}
-              href={`#${item}`}
-              className="text-sm font-mono text-white/50 hover:text-cyan-400 transition-colors tracking-wider"
-            >
-              {item.toUpperCase()}
-            </a>
-          ))}
-        </nav>
+        <div className="flex items-center gap-8">
+          <nav className="flex gap-8">
+            {['about', 'work', 'contact'].map((item) => (
+              <a
+                key={item}
+                href={`#${item}`}
+                className="text-sm font-mono text-[#a3a3a3] hover:text-[#fbbf24] transition-colors tracking-wider"
+              >
+                {item.toUpperCase()}
+              </a>
+            ))}
+          </nav>
+          {/* Chat Button */}
+          <button
+            onClick={() => setIsChatOpen(true)}
+            className="p-2 text-[#a3a3a3] hover:text-[#fbbf24] transition-colors"
+            title="Chat with AI"
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+            </svg>
+          </button>
+        </div>
       </header>
 
       {/* Scrollable Content */}
@@ -141,23 +240,23 @@ export default function App() {
             <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
             <span className="text-xs font-mono text-green-400 tracking-widest">AVAILABLE FOR WORK</span>
           </div>
-          <h1 className="text-7xl md:text-8xl font-light text-white mb-4 tracking-tight animate-fade-in-up animate-delay-200">
+          <h1 className="text-7xl md:text-8xl font-light text-[#f5f5f5] mb-4 tracking-tight animate-fade-in-up animate-delay-200">
             DUC
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-pink-500">PHAN</span>
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#fbbf24] to-[#64748b]">PHAN</span>
           </h1>
-          <p className="text-xl font-mono text-cyan-400/80 mb-8 tracking-wider animate-fade-in-up animate-delay-300">
+          <p className="text-xl font-mono text-[#fbbf24]/80 mb-8 tracking-wider animate-fade-in-up animate-delay-300">
             FULL STACK DEVELOPER
           </p>
-          <p className="text-white/50 max-w-lg leading-relaxed mb-12 text-center animate-fade-in-up animate-delay-400">
+          <p className="text-[#a3a3a3] max-w-lg leading-relaxed mb-12 text-center animate-fade-in-up animate-delay-400">
             Building modern web applications with clean code and creative solutions.
             Specialized in React, TypeScript, and immersive frontend experiences.
           </p>
           <a
             href="#work"
-            className="group inline-flex items-center gap-2 px-6 py-3 bg-white/5 border border-white/10 hover:border-cyan-400/50 transition-all duration-300 animate-fade-in-up animate-delay-500"
+            className="group inline-flex items-center gap-2 px-6 py-3 bg-[#333333] border border-[#525252] hover:border-[#fbbf24]/50 transition-all duration-300 animate-fade-in-up animate-delay-500"
           >
-            <span className="text-sm font-mono text-white/70 group-hover:text-cyan-400 tracking-wider">VIEW WORK</span>
-            <svg className="w-4 h-4 text-white/50 group-hover:text-cyan-400 transition-colors group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <span className="text-sm font-mono text-[#f5f5f5]/70 group-hover:text-[#fbbf24] tracking-wider">VIEW WORK</span>
+            <svg className="w-4 h-4 text-[#a3a3a3] group-hover:text-[#fbbf24] transition-colors group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
             </svg>
           </a>
@@ -183,24 +282,24 @@ export default function App() {
         <Section id="work" title="WORK">
           <div className="grid gap-6">
             {projects.map((project, index) => (
-              <a
+              <button
                 key={index}
-                href={project.link}
-                className="group relative p-8 bg-white/[0.02] border border-white/10 hover:border-cyan-400/30 transition-all duration-300 overflow-hidden animate-fade-in-up"
+                onClick={() => handleProjectClick(project)}
+                className="group relative p-8 bg-[#333333] border border-[#525252] hover:border-[#fbbf24]/30 transition-all duration-300 overflow-hidden animate-fade-in-up text-left w-full"
                 style={{ animationDelay: `${(index + 1) * 100}ms` }}
               >
-                <div className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-cyan-400 to-pink-500 opacity-0 group-hover:opacity-100 transition-opacity" />
-                <div className="absolute inset-0 bg-gradient-to-r from-cyan-400/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                <div className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-[#fbbf24] to-[#64748b] opacity-0 group-hover:opacity-100 transition-opacity" />
+                <div className="absolute inset-0 bg-gradient-to-r from-[#fbbf24]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                 <div className="relative">
-                  <h3 className="text-xl text-white mb-2 group-hover:text-cyan-400 transition-colors">{project.title}</h3>
-                  <p className="text-white/50 mb-4">{project.description}</p>
+                  <h3 className="text-xl text-[#f5f5f5] mb-2 group-hover:text-[#fbbf24] transition-colors">{project.title}</h3>
+                  <p className="text-[#a3a3a3] mb-4">{project.description}</p>
                   <div className="flex gap-3">
                     {project.tech.map((t) => (
-                      <span key={t} className="text-xs font-mono text-white/30 px-2 py-1 border border-white/10">{t}</span>
+                      <span key={t} className="text-xs font-mono text-[#a3a3a3]/50 px-2 py-1 border border-[#525252]">{t}</span>
                     ))}
                   </div>
                 </div>
-              </a>
+              </button>
             ))}
           </div>
         </Section>
@@ -208,7 +307,7 @@ export default function App() {
         {/* Contact */}
         <Section id="contact" title="CONTACT">
           <div className="max-w-2xl">
-            <p className="text-white/50 mb-10 animate-fade-in-up animate-delay-100">
+            <p className="text-[#a3a3a3] mb-10 animate-fade-in-up animate-delay-100">
               Interested in working together? Let's connect.
             </p>
             <div className="grid gap-4">
@@ -218,12 +317,12 @@ export default function App() {
                   href={contact.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group flex items-center justify-between p-4 bg-white/[0.02] border border-white/10 hover:border-cyan-400/30 transition-all duration-300 animate-fade-in-up"
+                  className="group flex items-center justify-between p-4 bg-[#333333] border border-[#525252] hover:border-[#fbbf24]/30 transition-all duration-300 animate-fade-in-up"
                   style={{ animationDelay: `${(index + 1) * 100}ms` }}
                 >
-                  <span className="text-sm font-mono text-white/40">{contact.label}</span>
-                  <span className="text-sm font-mono text-white/60 group-hover:text-cyan-400 transition-colors">{contact.value}</span>
-                  <svg className="w-4 h-4 text-white/20 group-hover:text-cyan-400 transition-colors group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <span className="text-sm font-mono text-[#a3a3a3]/50">{contact.label}</span>
+                  <span className="text-sm font-mono text-[#f5f5f5]/60 group-hover:text-[#fbbf24] transition-colors">{contact.value}</span>
+                  <svg className="w-4 h-4 text-[#a3a3a3]/30 group-hover:text-[#fbbf24] transition-colors group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
                   </svg>
                 </a>
@@ -233,10 +332,10 @@ export default function App() {
         </Section>
 
         {/* Footer */}
-        <footer className="py-8 px-8 border-t border-white/5">
+        <footer className="py-8 px-8 border-t border-[#525252]">
           <div className="flex justify-between items-center">
-            <span className="text-xs font-mono text-white/30 tracking-widest">DUC/PHAN</span>
-            <span className="text-xs font-mono text-white/30 tracking-wider">2026</span>
+            <span className="text-xs font-mono text-[#a3a3a3]/50 tracking-widest">DUC/PHAN</span>
+            <span className="text-xs font-mono text-[#a3a3a3]/50 tracking-wider">2026</span>
           </div>
         </footer>
       </div>

@@ -31,45 +31,40 @@ export function HeroInteractive({ children }: HeroProps) {
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
     >
-      {/* Mouse follower glow */}
+      {/* Mouse follower glow - subtle gold */}
       <div
         className="pointer-events-none fixed w-96 h-96 rounded-full blur-3xl transition-opacity duration-300"
         style={{
           left: isHovering ? `calc(50% + ${mousePos.x * 200}px - 192px)` : '50%',
           top: isHovering ? `calc(50% + ${mousePos.y * 150}px - 192px)` : '50%',
-          opacity: isHovering ? 0.6 : 0,
-          background: 'radial-gradient(circle, rgba(6, 182, 212, 0.4) 0%, rgba(236, 72, 153, 0.2) 50%, transparent 70%)',
+          opacity: isHovering ? 0.3 : 0,
+          background: 'radial-gradient(circle, rgba(212, 165, 116, 0.3) 0%, rgba(100, 116, 139, 0.15) 50%, transparent 70%)',
           transform: isHovering ? 'scale(1)' : 'scale(0.5)',
         }}
       />
 
-      {/* Interactive grid background */}
+      {/* Subtle gradient background */}
       <div
-        className="absolute inset-0 opacity-20"
+        className="absolute inset-0 opacity-30"
         style={{
-          backgroundImage: `
-            linear-gradient(rgba(6, 182, 212, 0.1) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(6, 182, 212, 0.1) 1px, transparent 1px)
-          `,
-          backgroundSize: '50px 50px',
-          transform: `perspective(500px) rotateX(60deg) translateY(${mousePos.y * 30}px) translateZ(-50px)`,
+          background: 'radial-gradient(ellipse at center, rgba(212, 165, 116, 0.05) 0%, transparent 70%)',
         }}
       />
 
-      {/* Floating particles */}
+      {/* Floating particles - subtle gold */}
       {isHovering && (
         <>
-          {[...Array(20)].map((_, i) => (
+          {[...Array(12)].map((_, i) => (
             <div
               key={i}
-              className="absolute w-1 h-1 bg-cyan-400 rounded-full pointer-events-none"
+              className="absolute w-1 h-1 bg-[#fbbf24] rounded-full pointer-events-none"
               style={{
                 left: `${Math.random() * 100}%`,
                 top: `${Math.random() * 100}%`,
-                opacity: Math.random() * 0.5 + 0.2,
-                animation: `float ${2 + Math.random() * 3}s ease-in-out infinite`,
+                opacity: Math.random() * 0.3 + 0.1,
+                animation: `float ${3 + Math.random() * 4}s ease-in-out infinite`,
                 animationDelay: `${Math.random() * 2}s`,
-                transform: `translate(${mousePos.x * (20 + i % 10)}px, ${mousePos.y * (20 + i % 10)}px)`,
+                transform: `translate(${mousePos.x * (10 + i % 10)}px, ${mousePos.y * (10 + i % 10)}px)`,
               }}
             />
           ))}
@@ -80,27 +75,11 @@ export function HeroInteractive({ children }: HeroProps) {
       <div
         className="relative z-10 flex flex-col items-center justify-center h-full"
         style={{
-          transform: `translate(${mousePos.x * -15}px, ${mousePos.y * -15}px)`,
-          transition: 'transform 0.1s ease-out',
+          transform: `translate(${mousePos.x * -10}px, ${mousePos.y * -10}px)`,
+          transition: 'transform 0.15s ease-out',
         }}
       >
         {children}
-      </div>
-
-      {/* Scanline effect */}
-      <div
-        className="absolute inset-0 pointer-events-none overflow-hidden opacity-5"
-        style={{
-          background: 'linear-gradient(transparent 50%, rgba(0, 0, 0, 0.5) 50%)',
-          backgroundSize: '100% 4px',
-        }}
-      >
-        <div
-          className="absolute inset-0 bg-gradient-to-b from-transparent via-cyan-400/10 to-transparent animate-scanline"
-          style={{
-            animation: 'scanline 8s linear infinite',
-          }}
-        />
       </div>
     </div>
   );
