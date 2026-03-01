@@ -1,5 +1,4 @@
 import { useState, useEffect, useRef } from 'react';
-import { sendMessage, clearChat, isApiConfigured } from '../../lib/gemini';
 
 interface Message {
   role: 'user' | 'assistant';
@@ -11,10 +10,13 @@ interface ChatDialogProps {
   onClose: () => void;
 }
 
+const API_URL = import.meta.env.VITE_API_URL || '';
+
 export function ChatDialog({ isOpen, onClose }: ChatDialogProps) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [apiError, setApiError] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -40,12 +42,30 @@ export function ChatDialog({ isOpen, onClose }: ChatDialogProps) {
     setIsLoading(true);
 
     try {
-      const response = await sendMessage(userMessage);
-      setMessages(prev => [...prev, { role: 'assistant', content: response }]);
+      const res = await fetch(`${API_URL}/api/chat/message`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          message: userMessage,
+          history: messages
+        })
+      });
+
+      if (!res.ok) {
+        const data = await res.json();
+        setApiError(true);
+        setMessages(prev => [...prev, { role: 'assistant', content: data.error || 'API not configured. Please contact the admin.' }]);
+        return;
+      }
+
+      const data = await res.json();
+      setMessages(prev => [...prev, { role: 'assistant', content: data.reply }]);
+      setApiError(false);
     } catch (error) {
+      setApiError(true);
       setMessages(prev => [...prev, {
         role: 'assistant',
-        content: 'Sorry, something went wrong. Please try again.'
+        content: 'Sorry, something went wrong. Please try again later.'
       }]);
     } finally {
       setIsLoading(false);
@@ -53,11 +73,11 @@ export function ChatDialog({ isOpen, onClose }: ChatDialogProps) {
   };
 
   const handleClearChat = () => {
-    clearChat();
     setMessages([{
       role: 'assistant',
       content: "Hi! I'm Duc's AI assistant. Ask me anything about his projects, skills, or experience!"
     }]);
+    setApiError(false);
   };
 
   if (!isOpen) return null;
@@ -71,9 +91,9 @@ export function ChatDialog({ isOpen, onClose }: ChatDialogProps) {
       />
 
       {/* Dialog */}
-      <div className="relative w-full max-w-lg h-[600px] bg-[#2a2a2a] border border-[#404040] rounded-lg flex flex-col overflow-hidden">
+      <div className="relative w-full max-w-lg h-[600px] bg-[#2a2a2a] border border-[#525252] rounded-lg flex flex-col overflow-hidden">
         {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b border-[#404040]">
+        <div className="flex items-center justify-between p-4 border-b border-[#525252]">
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 rounded-full bg-[#fbbf24]/20 flex items-center justify-center">
               <svg className="w-4 h-4 text-[#fbbf24]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -81,17 +101,17 @@ export function ChatDialog({ isOpen, onClose }: ChatDialogProps) {
               </svg>
             </div>
             <div>
-              <h3 className="text-[#f5f5f5] font-medium">AI Assistant</h3>
-              <p className="text-xs text-[#a3a3a3]">Ask about Duc's work</p>
+              <h3 className="text-[#fafafa] font-medium">AI Assistant</h3>
+              <p className="text-xs text-[#a1a1aa]">Ask about Duc's work</p>
             </div>
           </div>
           <div className="flex items-center gap-2">
-            {!isApiConfigured() && (
-              <span className="text-xs text-yellow-500/80 mr-2">API Key Missing</span>
+            {apiError && (
+              <span className="text-xs text-yellow-500/80 mr-2">API Issue</span>
             )}
             <button
               onClick={handleClearChat}
-              className="p-2 text-[#a3a3a3] hover:text-[#f5f5f5] transition-colors"
+              className="p-2 text-[#a1a1aa] hover:text-[#fafafa] transition-colors"
               title="Clear chat"
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -100,7 +120,7 @@ export function ChatDialog({ isOpen, onClose }: ChatDialogProps) {
             </button>
             <button
               onClick={onClose}
-              className="p-2 text-[#a3a3a3] hover:text-[#f5f5f5] transition-colors"
+              className="p-2 text-[#a1a1aa] hover:text-[#fafafa] transition-colors"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -119,8 +139,8 @@ export function ChatDialog({ isOpen, onClose }: ChatDialogProps) {
               <div
                 className={`max-w-[80%] p-3 rounded-lg ${
                   message.role === 'user'
-                    ? 'bg-[#fbbf24]/20 text-[#f5f5f5] border border-[#fbbf24]/30'
-                    : 'bg-[#333333] text-[#a3a3a3] border border-[#404040]'
+                    ? 'bg-[#fbbf24]/20 text-[#fafafa] border border-[#fbbf24]/30'
+                    : 'bg-[#333333] text-[#a1a1aa] border border-[#525252]'
                 }`}
               >
                 <p className="text-sm whitespace-pre-wrap">{message.content}</p>
@@ -129,7 +149,7 @@ export function ChatDialog({ isOpen, onClose }: ChatDialogProps) {
           ))}
           {isLoading && (
             <div className="flex justify-start">
-              <div className="bg-[#333333] border border-[#404040] p-3 rounded-lg">
+              <div className="bg-[#333333] border border-[#525252] p-3 rounded-lg">
                 <div className="flex gap-1">
                   <div className="w-2 h-2 bg-[#fbbf24] rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
                   <div className="w-2 h-2 bg-[#fbbf24] rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
@@ -142,20 +162,20 @@ export function ChatDialog({ isOpen, onClose }: ChatDialogProps) {
         </div>
 
         {/* Input */}
-        <form onSubmit={handleSubmit} className="p-4 border-t border-[#404040]">
+        <form onSubmit={handleSubmit} className="p-4 border-t border-[#525252]">
           <div className="flex gap-2">
             <input
               type="text"
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              placeholder={isApiConfigured() ? "Ask a question..." : "Configure API key to chat"}
-              disabled={!isApiConfigured() || isLoading}
-              className="flex-1 px-4 py-2 bg-[#333333] border border-[#404040] rounded-lg text-[#f5f5f5] placeholder-[#a3a3a3]/50 focus:outline-none focus:border-[#fbbf24]/50 disabled:opacity-50"
+              placeholder="Ask a question..."
+              disabled={isLoading}
+              className="flex-1 px-4 py-2 bg-[#333333] border border-[#525252] rounded-lg text-[#fafafa] placeholder-[#71717a] focus:outline-none focus:border-[#fbbf24]/50 disabled:opacity-50"
             />
             <button
               type="submit"
-              disabled={!isApiConfigured() || isLoading || !input.trim()}
-              className="px-4 py-2 bg-[#fbbf24] text-[#2a2a2a] rounded-lg font-medium hover:bg-[#fbbf24]/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              disabled={isLoading || !input.trim()}
+              className="px-4 py-2 bg-[#fbbf24] text-[#1a1a1a] rounded-lg font-medium hover:bg-[#fbbf24]/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />

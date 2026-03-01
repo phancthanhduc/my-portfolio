@@ -3,6 +3,10 @@ FROM node:20-alpine AS builder
 
 WORKDIR /app
 
+# Accept build arguments for environment variables
+ARG VITE_GEMINI_API_KEY
+ENV VITE_GEMINI_API_KEY=$VITE_GEMINI_API_KEY
+
 # Copy package files
 COPY package*.json ./
 

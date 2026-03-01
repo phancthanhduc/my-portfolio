@@ -57,7 +57,7 @@ export async function sendMessage(message: string): Promise<string> {
 
   try {
     const response = await fetch(
-      `${API_BASE_URL}/models/gemini-2.0-flash:generateContent?key=${apiKey}`,
+      `${API_BASE_URL}/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
       {
         method: 'POST',
         headers: {
